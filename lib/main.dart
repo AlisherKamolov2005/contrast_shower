@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MiddleAssigmentApp());
-  print("Hello World");
 }
 
 class MiddleAssigmentApp extends StatelessWidget {
