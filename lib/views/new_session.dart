@@ -1,5 +1,5 @@
-import 'package:contrast_shower_companion/main.dart';
-import 'package:contrast_shower_companion/views/test.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,6 +14,34 @@ class _TimingWidgetState extends State<TimingWidget> {
   final _hotPhaseController  = TextEditingController(text: '3');
   final _coldPhaseController  = TextEditingController(text: '1');
   final _cyclesController  = TextEditingController(text: '3');
+  Timer? _timer;
+  int _start = 180; /// Default number of seconds
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec, 
+      (Timer timer) {
+        if(_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start --;
+          });
+        }
+      }
+    );
+  }
+
+  @override
+  void initState() {
+    _hotPhaseController.addListener(_updateTotalTime);
+    _coldPhaseController.addListener(_updateTotalTime);
+    _cyclesController.addListener(_updateTotalTime);
+    super.initState();
+  }
 
   void _incrementControllerValue(TextEditingController controller) {
     final int value = int.tryParse(controller.text) ?? 0;
@@ -35,12 +63,29 @@ class _TimingWidgetState extends State<TimingWidget> {
     return value;
   }
 
+  void _updateTotalTime() {
+    setState(() {});
+  }
+
   @override
   void dispose() {
+    // Remove the listeners
+    _hotPhaseController.removeListener(_updateTotalTime);
+    _coldPhaseController.removeListener(_updateTotalTime);
+    _cyclesController.removeListener(_updateTotalTime);
+    
+    // Dispose the controllers
     _hotPhaseController.dispose();
     _coldPhaseController.dispose();
     _cyclesController.dispose();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  String get timerText {
+    final minutes = (_start ~/ 60).toString().padLeft(2, '0'); 
+    final seconds = (_start % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   @override
@@ -58,34 +103,23 @@ class _TimingWidgetState extends State<TimingWidget> {
         backgroundColor: Colors.green,
       ),
       body: Stack(
-        alignment: AlignmentDirectional.topCenter,
+        fit: StackFit.loose,
+        alignment: Alignment.topCenter,
         children: [
-          // const Align(
-          //   alignment: Alignment.topCenter,
-          //   child: Padding(
-          //     padding: EdgeInsets.only(top: 20.0),
-          //     child: Text(
-          //       'Set Durations',
-          //       style: TextStyle(
-          //         fontWeight: FontWeight.bold,
-          //         fontSize: 40,
-          //         color: Colors.red,
-              
-          //       ),
-          //     ),
-          //   ),
-          // ),
-
-          Positioned(
-            top: 30,
-            child: Text(
-              'Total time: ${(get(_hotPhaseController) + get(_coldPhaseController)) * get(_cyclesController)}',
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
+          Text(timerText),
+          Align(
+            alignment: AlignmentDirectional.topCenter,
+            child: Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: Text(
+                  'Total time: ${(get(_hotPhaseController) + get(_coldPhaseController)) * get(_cyclesController)} min',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                ),
               ),
-            ),
           ),
           
           /// Hot Water Duration
@@ -96,35 +130,45 @@ class _TimingWidgetState extends State<TimingWidget> {
               children: [
                 SizedBox(
                   width: 200,
-                  child: TextField(
-                    controller: _hotPhaseController,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: 'Hot Water (minutes)',
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            iconSize: 20,
-                            icon: const Icon(Icons.remove_circle_outline),
-                            color: Colors.red,
-                            tooltip: 'Decrease by one minute',
-                            onPressed: () => _decrementControllerValue(_hotPhaseController),
+                  child: StreamBuilder<Object>(
+                    stream: null,
+                    builder: (context, snapshot) {
+                      return TextField(
+                        controller: _hotPhaseController,
+                        autocorrect: false,
+                        enableSuggestions: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(13),
                           ),
-                          IconButton(
-                            iconSize: 20,
-                            icon: const Icon(Icons.add_circle_outline),
-                            color: Colors.green,
-                            tooltip: 'Increase by one minute',
-                            onPressed: () => _incrementControllerValue(_hotPhaseController),
+                          labelText: 'Hot Water (minutes)',
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ), 
-                    ),
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                iconSize: 20,
+                                icon: const Icon(Icons.remove_circle_outline),
+                                color: Colors.red,
+                                tooltip: 'Decrease by one minute',
+                                onPressed: () => _decrementControllerValue(_hotPhaseController),
+                              ),
+                              IconButton(
+                                iconSize: 20,
+                                icon: const Icon(Icons.add_circle_outline),
+                                color: Colors.green,
+                                tooltip: 'Increase by one minute',
+                                onPressed: () => _incrementControllerValue(_hotPhaseController),
+                              ),
+                            ],
+                          ), 
+                        ),
+                      );
+                    }
                   ),
                 ),
               ],
@@ -147,8 +191,9 @@ class _TimingWidgetState extends State<TimingWidget> {
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      borderRadius: BorderRadius.circular(10), 
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      ), 
                       labelText: 'Cold Water (minutes)',
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -194,8 +239,13 @@ class _TimingWidgetState extends State<TimingWidget> {
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      ),
                       labelText: 'Number of Cycles',
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                       suffixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -222,14 +272,14 @@ class _TimingWidgetState extends State<TimingWidget> {
             ),
           ),
 
-
+          /// Begin Session button
           Positioned(
             top: 400,
             child: ElevatedButton(
               onPressed: () {
                   ///_incrementControllerValue(_coldPhaseController); //get(_coldPhaseController) += 1;
                 setState(() {
-                    
+                  startTimer();    
                 });
                 // Navigator.push(
                 //   context,

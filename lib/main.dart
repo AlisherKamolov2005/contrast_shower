@@ -1,4 +1,3 @@
-import 'package:contrast_shower_companion/views/test.dart';
 import 'package:flutter/material.dart';
 import 'package:contrast_shower_companion/views/new_session.dart';
 
