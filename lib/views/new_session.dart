@@ -1,5 +1,7 @@
 import 'package:contrast_shower_companion/main.dart';
+import 'package:contrast_shower_companion/views/test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TimingWidget extends StatefulWidget {
   const TimingWidget({super.key});
@@ -15,13 +17,22 @@ class _TimingWidgetState extends State<TimingWidget> {
 
   void _incrementControllerValue(TextEditingController controller) {
     final int value = int.tryParse(controller.text) ?? 0;
-    controller.text = (value + 1).toString();
+    setState(() {
+      controller.text = (value + 1).toString();            
+    });
   }
   void _decrementControllerValue(TextEditingController controller) {
     final int value = int.tryParse(controller.text) ?? 0;
     if(value > 0) {
-      controller.text = (value - 1).toString();
+      setState(() {
+        controller.text = (value - 1).toString();          
+      });
     }
+  }
+
+  int get(TextEditingController controller) {
+    final int value = int.tryParse(controller.text) ?? 0;
+    return value;
   }
 
   @override
@@ -38,7 +49,7 @@ class _TimingWidgetState extends State<TimingWidget> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Contrast Shower',
+          'Session Preferences',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -47,26 +58,39 @@ class _TimingWidgetState extends State<TimingWidget> {
         backgroundColor: Colors.green,
       ),
       body: Stack(
-        fit: StackFit.expand,
         alignment: AlignmentDirectional.topCenter,
         children: [
-          const Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Text(
-                'Set Durations',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
+          // const Align(
+          //   alignment: Alignment.topCenter,
+          //   child: Padding(
+          //     padding: EdgeInsets.only(top: 20.0),
+          //     child: Text(
+          //       'Set Durations',
+          //       style: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 40,
+          //         color: Colors.red,
               
-                ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+
+          Positioned(
+            top: 30,
+            child: Text(
+              'Total time: ${(get(_hotPhaseController) + get(_coldPhaseController)) * get(_cyclesController)}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 40,
               ),
             ),
           ),
           
+          /// Hot Water Duration
           Positioned(
-            top: 100,
+            top: 120,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -77,6 +101,7 @@ class _TimingWidgetState extends State<TimingWidget> {
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Hot Water (minutes)',
@@ -105,21 +130,29 @@ class _TimingWidgetState extends State<TimingWidget> {
               ],
             ),
           ),
+
+          /// Cold Water Duration
           Positioned(
-            top: 165,
+            top: 200,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
                   width: 200,
+                  
                   child: TextField(
                     controller: _coldPhaseController,
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
+                      borderRadius: BorderRadius.circular(10), 
                       labelText: 'Cold Water (minutes)',
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                       suffixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -145,8 +178,10 @@ class _TimingWidgetState extends State<TimingWidget> {
               ],
             ),
           ),
+
+          /// Number of Cycles
           Positioned(
-            top: 230,
+            top: 280,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -157,6 +192,7 @@ class _TimingWidgetState extends State<TimingWidget> {
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Number of Cycles',
@@ -185,22 +221,26 @@ class _TimingWidgetState extends State<TimingWidget> {
               ],
             ),
           ),
+
+
           Positioned(
-            bottom: 100,
-            right: 125,
-            left: 125,
+            top: 400,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HistoryPage()),
-                );
+                  ///_incrementControllerValue(_coldPhaseController); //get(_coldPhaseController) += 1;
+                setState(() {
+                    
+                });
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const TestWidget()),
+                // );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
               ),
               child: const Text(
-                'History', 
+                'Begin Session', 
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

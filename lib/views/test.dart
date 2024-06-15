@@ -15,25 +15,19 @@ class _TestWidgetState extends State<TestWidget> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-                            padding: const EdgeInsets.only(bottom: -10),
-                            child: IconButton(
-                              iconSize: 20,
-                              icon: const Icon(Icons.arrow_circle_down),
-                              tooltip: 'Decrease by one minute',
-                              onPressed: () => value += 1 ,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: -10),
-                            child: IconButton(
-                              iconSize: 20,
-                              
-                              icon: const Icon(Icons.arrow_circle_up),
-                              tooltip: 'Increase by one minute',
-                              onPressed: () => value -= 1,
-                            ),
-                          ),
+          Text(""),
+          IconButton(
+            iconSize: 20,
+            icon: const Icon(Icons.arrow_circle_down),
+            tooltip: 'Decrease by one minute',
+            onPressed: () => value += 1 ,
+          ),
+          IconButton(
+            iconSize: 20,                
+            icon: const Icon(Icons.arrow_circle_up),
+            tooltip: 'Increase by one minute',
+            onPressed: () => value -= 1,
+          ),
         ],
       ),
     );
