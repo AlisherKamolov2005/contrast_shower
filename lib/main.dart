@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:contrast_shower_companion/views/new_session.dart';
+import 'package:contrast_shower_companion/views/user_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   runApp(const ProviderScope(
     child: MiddleAssigmentApp(),
   ));
+}
+
+class ShowerSession {
+  
 }
 
 class MiddleAssigmentApp extends StatelessWidget {

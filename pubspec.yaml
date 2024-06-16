@@ -33,6 +33,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
   timer_controller: ^0.1.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

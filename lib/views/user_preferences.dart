@@ -21,6 +21,8 @@ final cyclesProvider = StateProvider<String>((ref) => '3');
 //   }
 // }
 
+
+
 class TimingWidget extends ConsumerStatefulWidget {
   const TimingWidget({super.key});
 
@@ -39,22 +41,6 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
     _coldPhaseController.addListener(_updateTotalTime);
     _cyclesController.addListener(_updateTotalTime);
     super.initState();
-  }
-
-  void _incrementControllerValue(TextEditingController controller) {
-    final int value = int.tryParse(controller.text) ?? 0;
-    setState(() {
-      controller.text = (value + 1).toString();
-    });
-  }
-
-  void _decrementControllerValue(TextEditingController controller) {
-    final int value = int.tryParse(controller.text) ?? 0;
-    if (value > 0) {
-      setState(() {
-        controller.text = (value - 1).toString();
-      });
-    }
   }
 
   int get(TextEditingController controller) {
@@ -370,7 +356,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ContrastShowerCycle() ),
+                  MaterialPageRoute(builder: (context) => const ContrastShowerCycle() ),
                 );
               },
               style: ElevatedButton.styleFrom(
