@@ -23,7 +23,7 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
     _timer = Timer.periodic(
       oneSec, 
       (Timer timer) {
-        if(_start == 0) {
+        if(_start == 1) {
           setState(() {
             timer.cancel();
             
@@ -126,19 +126,19 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 700), 
+                  padding: const EdgeInsets.only(top: 650), 
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.blue,
                     ),
-                    width: 350,
-                    height: 133,
+                    width: 365,
+                    height: 193,
                     child: const Stack(
                       alignment: Alignment.topCenter,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 17),
+                          padding: EdgeInsets.only(top: 50),
                           child: Text(
                             'Next Phase\n',
                             style: TextStyle(
