@@ -1,39 +1,37 @@
-import 'dart:async';
-
+import 'package:contrast_shower_companion/views/contrast_shower.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TimingWidget extends StatefulWidget {
+final hotPhaseProvider = StateProvider<String>((ref) => '3');
+final coldPhaseProvider = StateProvider<String>((ref) => '1');
+final cyclesProvider = StateProvider<String>((ref) => '3');
+
+// class RiverpodModel extends ChangeNotifier {
+//   int counter;
+//   RiverpodModel({required this.counter});
+
+//   void addCounter() {
+//     counter ++;
+//     notifyListeners();
+//   }
+//   void removeCounter() {
+//     counter --;
+//     notifyListeners();
+//   }
+// }
+
+class TimingWidget extends ConsumerStatefulWidget {
   const TimingWidget({super.key});
 
   @override
-  State<TimingWidget> createState() => _TimingWidgetState();
+  _TimingWidgetState createState() => _TimingWidgetState();
 }
 
-class _TimingWidgetState extends State<TimingWidget> {
-  final _hotPhaseController  = TextEditingController(text: '3');
-  final _coldPhaseController  = TextEditingController(text: '1');
-  final _cyclesController  = TextEditingController(text: '3');
-  Timer? _timer;
-  int _start = 180; /// Default number of seconds
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec, 
-      (Timer timer) {
-        if(_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start --;
-          });
-        }
-      }
-    );
-  }
+class _TimingWidgetState extends ConsumerState<TimingWidget> {
+  final _hotPhaseController = TextEditingController(text: '3');
+  final _coldPhaseController = TextEditingController(text: '1');
+  final _cyclesController = TextEditingController(text: '3');
 
   @override
   void initState() {
@@ -46,14 +44,15 @@ class _TimingWidgetState extends State<TimingWidget> {
   void _incrementControllerValue(TextEditingController controller) {
     final int value = int.tryParse(controller.text) ?? 0;
     setState(() {
-      controller.text = (value + 1).toString();            
+      controller.text = (value + 1).toString();
     });
   }
+
   void _decrementControllerValue(TextEditingController controller) {
     final int value = int.tryParse(controller.text) ?? 0;
-    if(value > 0) {
+    if (value > 0) {
       setState(() {
-        controller.text = (value - 1).toString();          
+        controller.text = (value - 1).toString();
       });
     }
   }
@@ -73,19 +72,12 @@ class _TimingWidgetState extends State<TimingWidget> {
     _hotPhaseController.removeListener(_updateTotalTime);
     _coldPhaseController.removeListener(_updateTotalTime);
     _cyclesController.removeListener(_updateTotalTime);
-    
+
     // Dispose the controllers
     _hotPhaseController.dispose();
     _coldPhaseController.dispose();
     _cyclesController.dispose();
-    _timer?.cancel();
     super.dispose();
-  }
-
-  String get timerText {
-    final minutes = (_start ~/ 60).toString().padLeft(2, '0'); 
-    final seconds = (_start % 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
   }
 
   @override
@@ -103,25 +95,50 @@ class _TimingWidgetState extends State<TimingWidget> {
         backgroundColor: Colors.green,
       ),
       body: Stack(
-        fit: StackFit.loose,
+        fit: StackFit.expand,
         alignment: Alignment.topCenter,
         children: [
-          Text(timerText),
           Align(
             alignment: AlignmentDirectional.topCenter,
             child: Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: Text(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: Consumer(builder: (context, ref, child) {
+                final count = ref.watch(hotPhaseProvider);
+                _hotPhaseController.value = TextEditingValue(
+                  text: count,
+                  selection: TextSelection.fromPosition(
+                    TextPosition(offset: count.length),
+                  ),
+                );
+
+                final count1 = ref.watch(coldPhaseProvider);
+                _coldPhaseController.value = TextEditingValue(
+                  text: count1,
+                  selection: TextSelection.fromPosition(
+                    TextPosition(offset: count1.length),
+                  ),
+                );
+
+                final count3 = ref.watch(cyclesProvider);
+                _cyclesController.value = TextEditingValue(
+                  text: count3,
+                  selection: TextSelection.fromPosition(
+                    TextPosition(offset: count3.length),
+                  ),
+                );
+
+                return Text(
                   'Total time: ${(get(_hotPhaseController) + get(_coldPhaseController)) * get(_cyclesController)} min',
                   style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
                   ),
-                ),
-              ),
+                );
+              }),
+            ),
           ),
-          
+
           /// Hot Water Duration
           Positioned(
             top: 120,
@@ -130,46 +147,67 @@ class _TimingWidgetState extends State<TimingWidget> {
               children: [
                 SizedBox(
                   width: 200,
-                  child: StreamBuilder<Object>(
-                    stream: null,
-                    builder: (context, snapshot) {
-                      return TextField(
-                        controller: _hotPhaseController,
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                          ),
-                          labelText: 'Hot Water (minutes)',
-                          labelStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          suffixIcon: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                iconSize: 20,
-                                icon: const Icon(Icons.remove_circle_outline),
-                                color: Colors.red,
-                                tooltip: 'Decrease by one minute',
-                                onPressed: () => _decrementControllerValue(_hotPhaseController),
-                              ),
-                              IconButton(
-                                iconSize: 20,
-                                icon: const Icon(Icons.add_circle_outline),
-                                color: Colors.green,
-                                tooltip: 'Increase by one minute',
-                                onPressed: () => _incrementControllerValue(_hotPhaseController),
-                              ),
-                            ],
-                          ), 
+                  child: Consumer(builder: (context, ref, child) {
+                    final count = ref.watch(hotPhaseProvider);
+                    _hotPhaseController.value = TextEditingValue(
+                      text: count,
+                      selection: TextSelection.fromPosition(
+                        TextPosition(offset: count.length),
+                      ),
+                    );
+
+                    return TextField(
+                      controller: _hotPhaseController,
+                      onChanged: (value) {
+                        ref.read(hotPhaseProvider.notifier).state = value;
+                      },
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(13),
                         ),
-                      );
-                    }
-                  ),
+                        labelText: 'Hot Water (minutes)',
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              iconSize: 20,
+                              icon: const Icon(Icons.remove_circle_outline),
+                              color: Colors.red,
+                              tooltip: 'Decrease by one minute',
+                              onPressed: () {
+                                ref.read(hotPhaseProvider.notifier).update((state) {
+                                  final int temp = int.tryParse(state) ?? 0;
+                                  state =
+                                      (temp > 0 ? temp - 1 : temp).toString();
+                                  return state;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              iconSize: 20,
+                              icon: const Icon(Icons.add_circle_outline),
+                              color: Colors.green,
+                              tooltip: 'Increase by one minute',
+                              onPressed: () {
+                                ref.read(hotPhaseProvider.notifier).update((state) {
+                                  final int temp = int.tryParse(state) ?? 0;
+                                  state = (temp + 1).toString();
+                                  return state;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),
@@ -183,42 +221,66 @@ class _TimingWidgetState extends State<TimingWidget> {
               children: [
                 SizedBox(
                   width: 200,
-                  
-                  child: TextField(
-                    controller: _coldPhaseController,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(13),
-                      ), 
-                      labelText: 'Cold Water (minutes)',
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                  child: Consumer(builder: (context, ref, child) {
+                    final count = ref.watch(coldPhaseProvider);
+                    _coldPhaseController.value = TextEditingValue(
+                      text: count,
+                      selection: TextSelection.fromPosition(
+                        TextPosition(offset: count.length),
                       ),
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            iconSize: 20,
-                            icon: const Icon(Icons.remove_circle_outline),
-                            color: Colors.red,
-                            tooltip: 'Decrease by one minute',
-                            onPressed: () => _decrementControllerValue(_coldPhaseController),
-                          ),
-                          IconButton(
-                            iconSize: 20,
-                            icon: const Icon(Icons.add_circle_outline),
-                            color: Colors.green,
-                            tooltip: 'Increase by one minute',
-                            onPressed: () => _incrementControllerValue(_coldPhaseController),
-                          ),
-                        ],
-                      ), 
-                    ),
-                  ),
+                    );
+
+                    return TextField(
+                      controller: _coldPhaseController,
+                      onChanged: (value) {
+                        ref.read(coldPhaseProvider.notifier).state = value;
+                      },
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        labelText: 'Cold Water (minutes)',
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              iconSize: 20,
+                              icon: const Icon(Icons.remove_circle_outline),
+                              color: Colors.red,
+                              tooltip: 'Decrease by one minute',
+                              onPressed: () {
+                                ref.read(coldPhaseProvider.notifier).update((state) {
+                                  final int temp = int.tryParse(state) ?? 0;
+                                  state = (temp > 0 ? temp - 1 : temp).toString();
+                                  return state;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              iconSize: 20,
+                              icon: const Icon(Icons.add_circle_outline),
+                              color: Colors.green,
+                              tooltip: 'Increase by one minute',
+                              onPressed: () {
+                                ref.read(coldPhaseProvider.notifier).update((state) {
+                                  final int temp = int.tryParse(state) ?? 0;
+                                  state = (temp + 1).toString();
+                                  return state;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),
@@ -232,40 +294,69 @@ class _TimingWidgetState extends State<TimingWidget> {
               children: [
                 SizedBox(
                   width: 200,
-                  child: TextField(
-                    controller: _cyclesController,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      labelText: 'Number of Cycles',
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            iconSize: 20,
-                            icon: const Icon(Icons.remove_circle_outline),
-                            color: Colors.red,
-                            tooltip: 'Decrease by one minute',
-                            onPressed: () => _decrementControllerValue(_cyclesController),
-                          ),
-                          IconButton(
-                            iconSize: 20,
-                            icon: const Icon(Icons.add_circle_outline),
-                            color: Colors.green,
-                            tooltip: 'Increase by one minute',
-                            onPressed: () => _incrementControllerValue(_cyclesController),
-                          ),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final count = ref.watch(cyclesProvider);
+                      _cyclesController.value = TextEditingValue(
+                        text: count,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: count.length),
+                        ),
+                      );
+
+                      return TextField(
+                        controller: _cyclesController,
+                        onChanged: (value) {
+                          ref.read(cyclesProvider.notifier).state = value;
+                        },
+                        autocorrect: false,
+                        enableSuggestions: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
                         ],
-                      ), 
-                    ),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(13),
+                          ),
+                          labelText: 'Number of Cycles',
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                iconSize: 20,
+                                icon: const Icon(Icons.remove_circle_outline),
+                                color: Colors.red,
+                                tooltip: 'Decrease by one minute',
+                                onPressed: () {
+                                  ref.read(cyclesProvider.notifier).update((state){
+                                      final int temp = int.tryParse(state) ?? 0;
+                                      state = (temp > 0 ? temp - 1 : temp).toString();
+                                      return state;
+                                  });
+                                }
+                              ),
+                              IconButton(
+                                iconSize: 20,
+                                icon: const Icon(Icons.add_circle_outline),
+                                color: Colors.green,
+                                tooltip: 'Increase by one minute',
+                                onPressed: () {
+                                  ref.read(cyclesProvider.notifier).update((state) {
+                                    final temp = int.tryParse(state) ?? 0;
+                                    state = (temp + 1).toString();
+                                    return state;
+                                  });
+                                }
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -277,20 +368,16 @@ class _TimingWidgetState extends State<TimingWidget> {
             top: 400,
             child: ElevatedButton(
               onPressed: () {
-                  ///_incrementControllerValue(_coldPhaseController); //get(_coldPhaseController) += 1;
-                setState(() {
-                  startTimer();    
-                });
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const TestWidget()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ContrastShowerCycle() ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
               ),
               child: const Text(
-                'Begin Session', 
+                'Begin Session',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

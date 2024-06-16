@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:contrast_shower_companion/views/new_session.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MiddleAssigmentApp());
+  runApp(const ProviderScope(
+    child: MiddleAssigmentApp(),
+  ));
 }
 
 class MiddleAssigmentApp extends StatelessWidget {
@@ -20,6 +23,7 @@ class MiddleAssigmentApp extends StatelessWidget {
     );
   }
 }
+
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
 
@@ -28,7 +32,6 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,37 +47,37 @@ class _HistoryPageState extends State<HistoryPage> {
         backgroundColor: Colors.blue,
       ),
       body: Stack(
-            //alignment: const Alignment(0.0, 0.4),
-            children: [
-              ListView.builder(
-                itemBuilder: (BuildContext context, int index) {  },
-              ),  
-              Positioned(
-                bottom: 100,
-                right: 75,
-                left: 75,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const TimingWidget()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:Colors.blue,
-                  ),
-                  child: const Text(
-                    'Start New Session',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+        //alignment: const Alignment(0.0, 0.4),
+        children: [
+          ListView.builder(
+            itemBuilder: (BuildContext context, int index) {},
+          ),
+          Positioned(
+            bottom: 100,
+            right: 75,
+            left: 75,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TimingWidget()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: const Text(
+                'Start New Session',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ],
-        ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
