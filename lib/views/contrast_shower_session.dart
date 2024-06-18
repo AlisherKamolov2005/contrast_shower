@@ -278,6 +278,7 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.black,
+                          // fromCssColor('#242526'),
                         ),
                         width: 365,
                         height: 193,

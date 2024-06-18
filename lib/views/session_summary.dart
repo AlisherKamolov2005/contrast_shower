@@ -215,29 +215,41 @@ class SessionSummary extends ConsumerWidget {
             ]
           ),
 
-          Center(
-            child: RatingBar(
-              initialRating: 3,
-              minRating: 1, 
-              maxRating: 5,
-              allowHalfRating: false, 
-              glow: false,
-              itemSize: 50,
-              onRatingUpdate: (double value) { 
-                sessionRating = value; 
-              }, 
-              ratingWidget: RatingWidget(
-                full: const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ), 
-                half: const Icon(Icons.star_half),
-                empty: const Icon(
-                  Icons.star,
-                  color: Color.fromARGB(255, 205, 204, 204),
-                ), 
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Rate this session',
+                style: TextStyle(
+                  fontSize: 20,
+                  //fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              const SizedBox(height: 12),
+              RatingBar(
+                initialRating: 2,
+                minRating: 1, 
+                maxRating: 5,
+                allowHalfRating: false, 
+                glow: false,
+                itemSize: 48,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                onRatingUpdate: (double value) { 
+                  sessionRating = value; 
+                }, 
+                ratingWidget: RatingWidget(
+                  full: const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ), 
+                  half: const Icon(Icons.star_half),
+                  empty: const Icon(
+                    Icons.star_border,
+                    color: Color.fromARGB(255, 186, 185, 185),
+                  ), 
+                ),
+              ),
+            ],
           ),
 
           Positioned(

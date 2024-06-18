@@ -7,22 +7,6 @@ final hotPhaseProvider = StateProvider<String>((ref) => '3');
 final coldPhaseProvider = StateProvider<String>((ref) => '1');
 final cyclesProvider = StateProvider<String>((ref) => '3');
 
-// class RiverpodModel extends ChangeNotifier {
-//   int counter;
-//   RiverpodModel({required this.counter});
-
-//   void addCounter() {
-//     counter ++;
-//     notifyListeners();
-//   }
-//   void removeCounter() {
-//     counter --;
-//     notifyListeners();
-//   }
-// }
-
-
-
 class TimingWidget extends ConsumerStatefulWidget {
   const TimingWidget({super.key});
 
