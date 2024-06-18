@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   runApp(const ProviderScope(
-    child: MiddleAssigmentApp(),
+    child: MyApp(),
   ));
 }
 
@@ -12,14 +12,14 @@ class ShowerSession {
   
 }
 
-class MiddleAssigmentApp extends StatelessWidget {
-  const MiddleAssigmentApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Middle Assigment',
+      title: 'Contrast Showering',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -48,7 +48,7 @@ class _HistoryPageState extends State<HistoryPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.red,
       ),
       body: Stack(
         //alignment: const Alignment(0.0, 0.4),
@@ -60,16 +60,14 @@ class _HistoryPageState extends State<HistoryPage> {
             bottom: 100,
             right: 75,
             left: 75,
-            child: ElevatedButton(
+            child: FloatingActionButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const TimingWidget()),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
+              backgroundColor: Colors.red,
               child: const Text(
                 'Start New Session',
                 style: TextStyle(

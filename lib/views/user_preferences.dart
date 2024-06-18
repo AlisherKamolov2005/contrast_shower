@@ -1,4 +1,4 @@
-import 'package:contrast_shower_companion/views/contrast_shower.dart';
+import 'package:contrast_shower_companion/views/contrast_shower_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,29 +89,31 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
             child: Padding(
               padding: const EdgeInsets.only(top: 40.0),
               child: Consumer(builder: (context, ref, child) {
-                final count = ref.watch(hotPhaseProvider);
-                _hotPhaseController.value = TextEditingValue(
-                  text: count,
-                  selection: TextSelection.fromPosition(
-                    TextPosition(offset: count.length),
-                  ),
-                );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final count = ref.watch(hotPhaseProvider);
+                  _hotPhaseController.value = TextEditingValue(
+                    text: count,
+                    selection: TextSelection.fromPosition(
+                      TextPosition(offset: count.length),
+                    ),
+                  );
 
-                final count1 = ref.watch(coldPhaseProvider);
-                _coldPhaseController.value = TextEditingValue(
-                  text: count1,
-                  selection: TextSelection.fromPosition(
-                    TextPosition(offset: count1.length),
-                  ),
-                );
+                  final count1 = ref.watch(coldPhaseProvider);
+                  _coldPhaseController.value = TextEditingValue(
+                    text: count1,
+                    selection: TextSelection.fromPosition(
+                      TextPosition(offset: count1.length),
+                    ),
+                  );
 
-                final count3 = ref.watch(cyclesProvider);
-                _cyclesController.value = TextEditingValue(
-                  text: count3,
-                  selection: TextSelection.fromPosition(
-                    TextPosition(offset: count3.length),
-                  ),
-                );
+                  final count3 = ref.watch(cyclesProvider);
+                  _cyclesController.value = TextEditingValue(
+                    text: count3,
+                    selection: TextSelection.fromPosition(
+                      TextPosition(offset: count3.length),
+                    ),
+                  );  
+                });
 
                 return Text(
                   'Total time: ${(get(_hotPhaseController) + get(_coldPhaseController)) * get(_cyclesController)} min',
@@ -134,13 +136,15 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                 SizedBox(
                   width: 200,
                   child: Consumer(builder: (context, ref, child) {
-                    final count = ref.watch(hotPhaseProvider);
-                    _hotPhaseController.value = TextEditingValue(
-                      text: count,
-                      selection: TextSelection.fromPosition(
-                        TextPosition(offset: count.length),
-                      ),
-                    );
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      final count = ref.watch(hotPhaseProvider);
+                      _hotPhaseController.value = TextEditingValue(
+                        text: count,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: count.length),
+                        ),
+                      );  
+                    });
 
                     return TextField(
                       controller: _hotPhaseController,
@@ -208,13 +212,15 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                 SizedBox(
                   width: 200,
                   child: Consumer(builder: (context, ref, child) {
-                    final count = ref.watch(coldPhaseProvider);
-                    _coldPhaseController.value = TextEditingValue(
-                      text: count,
-                      selection: TextSelection.fromPosition(
-                        TextPosition(offset: count.length),
-                      ),
-                    );
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      final count = ref.watch(coldPhaseProvider);
+                      _coldPhaseController.value = TextEditingValue(
+                        text: count,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: count.length),
+                        ),
+                      );  
+                    });
 
                     return TextField(
                       controller: _coldPhaseController,
@@ -282,13 +288,15 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                   width: 200,
                   child: Consumer(
                     builder: (context, ref, child) {
-                      final count = ref.watch(cyclesProvider);
-                      _cyclesController.value = TextEditingValue(
-                        text: count,
-                        selection: TextSelection.fromPosition(
-                          TextPosition(offset: count.length),
-                        ),
-                      );
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        final count = ref.watch(cyclesProvider);
+                        _cyclesController.value = TextEditingValue(
+                          text: count,
+                          selection: TextSelection.fromPosition(
+                            TextPosition(offset: count.length),
+                          ),
+                        );  
+                      });
 
                       return TextField(
                         controller: _cyclesController,
@@ -320,7 +328,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                                 onPressed: () {
                                   ref.read(cyclesProvider.notifier).update((state){
                                       final int temp = int.tryParse(state) ?? 0;
-                                      state = (temp > 0 ? temp - 1 : temp).toString();
+                                      state = (temp > 1 ? temp - 1 : temp).toString();
                                       return state;
                                   });
                                 }
@@ -352,16 +360,16 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
           /// Begin Session button
           Positioned(
             top: 400,
-            child: ElevatedButton(
+            right: 110,
+            left: 110,
+            child: FloatingActionButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ContrastShowerCycle() ),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
+              backgroundColor: Colors.green,
               child: const Text(
                 'Begin Session',
                 style: TextStyle(

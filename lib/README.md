@@ -64,16 +64,30 @@ Timur's vision is now in your hands. Create an app that brings the contrast show
 #### Starting a New Session:
 
 **Home Screen:** Upon launching the app, users are greeted with a clean, tranquil home screen displaying their previous shower sessions. A prominent 'Start New Session' button is at the center of the screen. <br>
+
+
+# Done \/
 **Session Preferences:** Tapping the 'Start New Session' button leads to a preferences screen where users can customize the upcoming session's duration and temperature intervals.<br>
+
+# Done \/
 **Session Overview:** After setting their preferences, users are shown an overview of their upcoming session with a summary of intervals and total time. A 'Begin Session' button starts the shower timer.
 
 #### During the Session:
 
+# Done \/
 **Active Session Screen:** As the session begins, the screen transitions to display a large, animated timer indicating the current phase (hot or cold) with corresponding color themes (red for hot, blue for cold).<br>
+
+
 **Phase Transitions:** When it's time to switch temperatures, the app provides a clear visual cue through the custom render object animation and an optional sound notification.<br>
+
+# Done \/
 **Manual Override:** Users have the option to pause or end the session early via on-screen buttons, in cases where they need to adjust the session manually.
 
 #### Post-Session:
+
+# Done \/
 **Session Summary:** At the end of the session, users are taken to a summary screen showing the total time, number of phases completed, and an option to rate their experience.<br>
+
 **History Update:** The session details are automatically saved to the user's history, which can be viewed on the home screen.<br>
+
 **Home Screen Update:** The user is then returned to the home screen, which now displays the most recent session at the top of the history list.
