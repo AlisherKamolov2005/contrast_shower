@@ -17,14 +17,6 @@ void main() async {
   ));
 }
 
-// class UserPreferences {
-//   String hotWaterDuration;
-//   String coldWaterDuration;
-//   String numberOfCycles;
-
-//   UserPreferences(this.hotWaterDuration, this.coldWaterDuration, this.numberOfCycles);
-// }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -49,11 +41,29 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  late ScrollController _scrollController;
+  @override
+  void initState() {
+    super.initState();
+    
+    _scrollController = ScrollController();
+      
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToEnd();
+    });
+  }
+
+  void _scrollToEnd() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    final items = List<String>.generate(10, (i) => 'Session $i');
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    var keys = boxSessions.keys.toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
@@ -71,57 +81,59 @@ class _HistoryPageState extends State<HistoryPage> {
         backgroundColor: Colors.blue,
       ),
       body: Column(
-        //fit: StackFit.expand,
         children: [
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 50, left: 3),
+                padding: const EdgeInsets.only(top: 37, left: 3),
                 child: Container(
-                  ///alignment: Alignment.topLeft,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.brown),
+                    border: Border.all(width: 2.5, color: Colors.orange.shade100),
                     borderRadius: BorderRadius.circular(5),
-                    color: const Color.fromARGB(255, 243, 235, 235),
+                    color: Colors.orange.shade50, 
                   ),
-                  height: screenHeight * 0.30,// 260,
+                  height: screenHeight * 0.30,
                   width: screenWidth * 0.39,
-                  //width: 155,
+
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
+                      AutoSizeText(
                         'Rating',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.amber,
+                          color: Colors.orange,
                           fontSize: 17,
                         ),
+                        maxLines: 1,
                       ),
-                      Text(
+                      AutoSizeText(
                         'Total time (min.)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
                         ),
+                        maxLines: 1,
                       ),
-                      Text(
+                      AutoSizeText(
                         'Hot Water (min.)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.red,
                           fontSize: 17,
                         ),
+                        maxLines: 1,
                       ),
-                      Text(
+                      AutoSizeText(
                         'Cold Water (min.)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
                           fontSize: 17,
                         ),
+                        maxLines: 1,
                       ),
-                      Text(
+                      AutoSizeText(
                         'No. of Cycles',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -133,81 +145,130 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: SizedBox(
-                    height: screenHeight * 0.30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            border: const Border(
-                              right: BorderSide(color: Colors.grey),
-                              top: BorderSide(color: Colors.grey),
-                              bottom: BorderSide(color: Colors.grey),
+                child: SizedBox(
+                  height: screenHeight * 0.343,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: boxSessions.length,
+                    itemBuilder: (context, index) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() {});
+                      });
+                      Sessionshistory sessionshistory =
+                          boxSessions.getAt(index);
+                      return Column(
+                        children: [
+                          ///key of a Hive database object
+                          ///Date of completing session
+                          AutoSizeText(
+                            keys[index].substring(0, 10),
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
                           ),
-                          width: screenWidth * 0.2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              AutoSizeText(
-                                items[index],
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                ),
-                                maxLines: 1,
-                              ),
-                              AutoSizeText(
-                                items[index],
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                ),
-                                maxLines: 1,
-                              ),
-                              AutoSizeText(
-                                items[index],
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                ),
-                                maxLines: 1,
-                              ),
-                              AutoSizeText(
-                                items[index],
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                ),
-                                maxLines: 1,
-                              ),
-                              AutoSizeText(
-                                items[index],
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                ),
-                                maxLines: 1,
-                              ),
-                            ],
+                          AutoSizeText(
+                            keys[index].substring(11, 16),
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        );
-                      },
-                    ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: const Border(
+                                  right: BorderSide(color: Colors.amber),
+                                  top: BorderSide(color: Colors.amber),
+                                  bottom: BorderSide(color: Colors.amber),
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.amber.shade50,
+                              ),
+                              width: screenWidth * 0.196,
+                              margin: const EdgeInsets.only(left: 2),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  AutoSizeText(
+                                    sessionshistory.historyRating.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                  AutoSizeText(
+                                    sessionshistory.historyTotalTime.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                  AutoSizeText(
+                                    sessionshistory.historyHotWaterDuration
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                  AutoSizeText(
+                                    sessionshistory.historyColdWaterDuration
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                  AutoSizeText(
+                                    sessionshistory.historyNumberOfCycles
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
             ],
           ),
+          TextButton.icon(
+            onPressed: () {
+              setState(() {
+                boxSessions.clear();
+              });
+            },
+            style: ButtonStyle(
+                iconColor:
+                    WidgetStatePropertyAll(Colors.deepPurpleAccent[700])),
+            icon: const Icon(Icons.delete_outline),
+            label: Text(
+              'Clear History',
+              style: TextStyle(
+                color: Colors.deepPurpleAccent[700],
+              ),
+            ),
+          ),
           Expanded(
             child: Align(
-              alignment: Alignment(0.0, -0.5),
+              alignment: const Alignment(0.0, -0.5),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const TimingWidget()),
+                    MaterialPageRoute(
+                        builder: (context) => const TimingWidget()),
                   );
                 },
                 style: ButtonStyle(

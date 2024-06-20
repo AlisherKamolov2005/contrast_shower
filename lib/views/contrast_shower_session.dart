@@ -35,9 +35,10 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
           }
           if (numberOfCycles == cyclePhase * 2) {
             Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const SessionSummary()),
-            );
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SessionSummary()),
+                );
           }
         });
       } else {
@@ -105,7 +106,9 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
     final coldPhase = int.tryParse(ref.read(coldPhaseProvider))! * 60;
     final cyclePhase = int.tryParse(ref.read(cyclesProvider)) ?? 0;
     return Scaffold(
-      resizeToAvoidBottomInset: false, /// Prevents the widget from resizing when the keyboard appears
+      resizeToAvoidBottomInset: false,
+
+      /// Prevents the widget from resizing when the keyboard appears
       body: Stack(
         children: [
           /// Ongoing Phase: Hot Water
@@ -195,11 +198,7 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
                       _isRunning = false;
                       _timer?.cancel();
 
-                      Navigator.pop(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const TimingWidget()),
-                      );
+                      Navigator.pop(context);
                     },
                     icon: const Icon(
                       Icons.close,
@@ -363,11 +362,7 @@ class _ContrastShowerCycleState extends ConsumerState<ContrastShowerCycle> {
                         _isRunning = false;
                         _timer?.cancel();
 
-                        Navigator.pop(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TimingWidget()),
-                        );
+                        Navigator.pop(context);
                       },
                       icon: const Icon(
                         Icons.close,

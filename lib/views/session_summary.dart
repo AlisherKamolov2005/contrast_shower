@@ -8,34 +8,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
-class SessionSummary extends ConsumerWidget {
+class SessionSummary extends ConsumerStatefulWidget {
   const SessionSummary({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _SessionSummary createState() => _SessionSummary();
+}
+
+class _SessionSummary extends ConsumerState<SessionSummary> {
+  String formattedDate = '';
+  double sessionRating = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
     final hotPhase = int.tryParse(ref.read(hotPhaseProvider))!;
     final coldPhase = int.tryParse(ref.read(coldPhaseProvider))!;
     final cyclePhase = int.tryParse(ref.read(cyclesProvider)) ?? 0;
-    double sessionRating = 0;
+
     DateTime now = DateTime.now();
-    DateTime todayWithHourAndMinute =
-        DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    String formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(todayWithHourAndMinute);
+    DateTime todayWithHourAndMinute = DateTime(
+        now.year, now.month, now.day, now.hour, now.minute, now.second);
+    formattedDate =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(todayWithHourAndMinute);
 
-      boxSessions.put(
-          formattedDate,
-          Sessionshistory(
-              historyTotalTime: (hotPhase + coldPhase) * cyclePhase,
-              historyHotWaterDuration: hotPhase,
-              historyColdWaterDuration: coldPhase,
-              historyNumberOfCycles: cyclePhase,
-              historyRating: sessionRating));
-    ///Default value
-    // final _mybox = Hive.box('mybox');
-    //_mybox.put();
+    boxSessions.put(
+        formattedDate,
+        Sessionshistory (
+            historyTotalTime: (hotPhase + coldPhase) * cyclePhase,
+            historyHotWaterDuration: hotPhase,
+            historyColdWaterDuration: coldPhase,
+            historyNumberOfCycles: cyclePhase,
+            historyRating: sessionRating));
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    final hotPhase = int.tryParse(ref.read(hotPhaseProvider))!;
+    final coldPhase = int.tryParse(ref.read(coldPhaseProvider))!;
+    final cyclePhase = int.tryParse(ref.read(cyclesProvider)) ?? 0;
+    
     return Scaffold(
-      resizeToAvoidBottomInset: false, /// Prevents the widget from resizing when the keyboard appears
+      resizeToAvoidBottomInset: false,
+
+      /// Prevents the widget from resizing when the keyboard appears
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
@@ -45,7 +62,7 @@ class SessionSummary extends ConsumerWidget {
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
         ),
         backgroundColor: const Color.fromARGB(255, 230, 230, 230),
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -245,7 +262,18 @@ class SessionSummary extends ConsumerWidget {
                 itemSize: 48,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
                 onRatingUpdate: (double value) {
-                  sessionRating = value;
+                  setState(() {
+                    sessionRating = value;
+                  });
+                  
+                  boxSessions.put(
+                    formattedDate,
+                    Sessionshistory (
+                        historyTotalTime: (hotPhase + coldPhase) * cyclePhase,
+                        historyHotWaterDuration: hotPhase,
+                        historyColdWaterDuration: coldPhase,
+                        historyNumberOfCycles: cyclePhase,
+                        historyRating: sessionRating));
                 },
                 ratingWidget: RatingWidget(
                   full: const Icon(
@@ -254,7 +282,7 @@ class SessionSummary extends ConsumerWidget {
                   ),
                   half: const Icon(Icons.star_half),
                   empty: const Icon(
-                    Icons.star_border,  
+                    Icons.star_border,
                     color: Color.fromARGB(255, 186, 185, 185),
                   ),
                 ),
@@ -269,20 +297,16 @@ class SessionSummary extends ConsumerWidget {
               child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 230, 230, 230),
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) => const HistoryPage()), (route) => false);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryPage()),
+                        (route) => false);
                   },
                   child: const Icon(
                     Icons.home,
                     size: 40,
                   )
-                  //const Text(
-                  //   'Home',
-                  //   style: TextStyle(
-                  //     fontSize: 30,
-                  //     color: Colors.black,
-                  //   ),
-                  // ),
                   ),
             ),
           ),

@@ -63,6 +63,7 @@ Timur's vision is now in your hands. Create an app that brings the contrast show
 
 #### Starting a New Session:
 
+# Done \/
 **Home Screen:** Upon launching the app, users are greeted with a clean, tranquil home screen displaying their previous shower sessions. A prominent 'Start New Session' button is at the center of the screen. <br>
 
 
@@ -88,6 +89,8 @@ Timur's vision is now in your hands. Create an app that brings the contrast show
 # Done \/
 **Session Summary:** At the end of the session, users are taken to a summary screen showing the total time, number of phases completed, and an option to rate their experience.<br>
 
+# Done \/
 **History Update:** The session details are automatically saved to the user's history, which can be viewed on the home screen.<br>
 
+# Done \/
 **Home Screen Update:** The user is then returned to the home screen, which now displays the most recent session at the top of the history list.
