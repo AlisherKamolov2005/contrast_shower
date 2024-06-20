@@ -53,6 +53,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, /// Prevents the widget from resizing when the keyboard appears
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
@@ -65,8 +66,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
         backgroundColor: Colors.green,
       ),
       body: Stack(
-        fit: StackFit.expand,
-        alignment: Alignment.topCenter,
+        alignment: const Alignment(0.0, 0.15),
         children: [
           Align(
             alignment: AlignmentDirectional.topCenter,
@@ -96,7 +96,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                     selection: TextSelection.fromPosition(
                       TextPosition(offset: count3.length),
                     ),
-                  );  
+                  );
                 });
 
                 return Text(
@@ -127,7 +127,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                         selection: TextSelection.fromPosition(
                           TextPosition(offset: count.length),
                         ),
-                      );  
+                      );
                     });
 
                     return TextField(
@@ -156,7 +156,9 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                               color: Colors.red,
                               tooltip: 'Decrease by one minute',
                               onPressed: () {
-                                ref.read(hotPhaseProvider.notifier).update((state) {
+                                ref
+                                    .read(hotPhaseProvider.notifier)
+                                    .update((state) {
                                   final int temp = int.tryParse(state) ?? 0;
                                   state =
                                       (temp > 0 ? temp - 1 : temp).toString();
@@ -170,7 +172,9 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                               color: Colors.green,
                               tooltip: 'Increase by one minute',
                               onPressed: () {
-                                ref.read(hotPhaseProvider.notifier).update((state) {
+                                ref
+                                    .read(hotPhaseProvider.notifier)
+                                    .update((state) {
                                   final int temp = int.tryParse(state) ?? 0;
                                   state = (temp + 1).toString();
                                   return state;
@@ -203,7 +207,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                         selection: TextSelection.fromPosition(
                           TextPosition(offset: count.length),
                         ),
-                      );  
+                      );
                     });
 
                     return TextField(
@@ -232,9 +236,12 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                               color: Colors.red,
                               tooltip: 'Decrease by one minute',
                               onPressed: () {
-                                ref.read(coldPhaseProvider.notifier).update((state) {
+                                ref
+                                    .read(coldPhaseProvider.notifier)
+                                    .update((state) {
                                   final int temp = int.tryParse(state) ?? 0;
-                                  state = (temp > 0 ? temp - 1 : temp).toString();
+                                  state =
+                                      (temp > 0 ? temp - 1 : temp).toString();
                                   return state;
                                 });
                               },
@@ -245,7 +252,9 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                               color: Colors.green,
                               tooltip: 'Increase by one minute',
                               onPressed: () {
-                                ref.read(coldPhaseProvider.notifier).update((state) {
+                                ref
+                                    .read(coldPhaseProvider.notifier)
+                                    .update((state) {
                                   final int temp = int.tryParse(state) ?? 0;
                                   state = (temp + 1).toString();
                                   return state;
@@ -279,7 +288,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                           selection: TextSelection.fromPosition(
                             TextPosition(offset: count.length),
                           ),
-                        );  
+                        );
                       });
 
                       return TextField(
@@ -305,31 +314,34 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                iconSize: 20,
-                                icon: const Icon(Icons.remove_circle_outline),
-                                color: Colors.red,
-                                tooltip: 'Decrease by one minute',
-                                onPressed: () {
-                                  ref.read(cyclesProvider.notifier).update((state){
+                                  iconSize: 20,
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                  color: Colors.red,
+                                  tooltip: 'Decrease by one minute',
+                                  onPressed: () {
+                                    ref
+                                        .read(cyclesProvider.notifier)
+                                        .update((state) {
                                       final int temp = int.tryParse(state) ?? 0;
-                                      state = (temp > 1 ? temp - 1 : temp).toString();
+                                      state = (temp > 1 ? temp - 1 : temp)
+                                          .toString();
                                       return state;
-                                  });
-                                }
-                              ),
+                                    });
+                                  }),
                               IconButton(
-                                iconSize: 20,
-                                icon: const Icon(Icons.add_circle_outline),
-                                color: Colors.green,
-                                tooltip: 'Increase by one minute',
-                                onPressed: () {
-                                  ref.read(cyclesProvider.notifier).update((state) {
-                                    final temp = int.tryParse(state) ?? 0;
-                                    state = (temp + 1).toString();
-                                    return state;
-                                  });
-                                }
-                              ),
+                                  iconSize: 20,
+                                  icon: const Icon(Icons.add_circle_outline),
+                                  color: Colors.green,
+                                  tooltip: 'Increase by one minute',
+                                  onPressed: () {
+                                    ref
+                                        .read(cyclesProvider.notifier)
+                                        .update((state) {
+                                      final temp = int.tryParse(state) ?? 0;
+                                      state = (temp + 1).toString();
+                                      return state;
+                                    });
+                                  }),
                             ],
                           ),
                         ),
@@ -342,25 +354,25 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
           ),
 
           /// Begin Session button
-          Positioned(
-            top: 400,
-            right: 110,
-            left: 110,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ContrastShowerCycle() ),
-                );
-              },
-              backgroundColor: Colors.green,
-              child: const Text(
-                'Begin Session',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ContrastShowerCycle()),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(Colors.green),
+              padding: WidgetStateProperty.all(
+                  const EdgeInsets.all(13)), // Adjust padding as needed:
+            ),
+            child: const Text(
+              'Begin Session',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
             ),
           ),
