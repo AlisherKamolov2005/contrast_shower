@@ -1,4 +1,4 @@
-import 'package:contrast_shower_companion/views/contrast_shower_session.dart';
+import 'package:contrast_shower_companion/views/shower_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,14 +7,14 @@ final hotPhaseProvider = StateProvider<String>((ref) => '3');
 final coldPhaseProvider = StateProvider<String>((ref) => '1');
 final cyclesProvider = StateProvider<String>((ref) => '3');
 
-class TimingWidget extends ConsumerStatefulWidget {
-  const TimingWidget({super.key});
+class UserPreferences extends ConsumerStatefulWidget {
+  const UserPreferences({super.key});
 
   @override
-  _TimingWidgetState createState() => _TimingWidgetState();
+  _UserPreferences createState() => _UserPreferences();
 }
 
-class _TimingWidgetState extends ConsumerState<TimingWidget> {
+class _UserPreferences extends ConsumerState<UserPreferences> {
   final _hotPhaseController = TextEditingController(text: '3');
   final _coldPhaseController = TextEditingController(text: '1');
   final _cyclesController = TextEditingController(text: '3');
@@ -359,7 +359,7 @@ class _TimingWidgetState extends ConsumerState<TimingWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ContrastShowerCycle()),
+                    builder: (context) => const ShowerSession()),
               );
             },
             style: ButtonStyle(

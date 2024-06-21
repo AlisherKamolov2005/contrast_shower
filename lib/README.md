@@ -78,7 +78,7 @@ Timur's vision is now in your hands. Create an app that brings the contrast show
 # Done \/
 **Active Session Screen:** As the session begins, the screen transitions to display a large, animated timer indicating the current phase (hot or cold) with corresponding color themes (red for hot, blue for cold).<br>
 
-
+# Done \/
 **Phase Transitions:** When it's time to switch temperatures, the app provides a clear visual cue through the custom render object animation and an optional sound notification.<br>
 
 # Done \/

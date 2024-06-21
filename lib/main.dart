@@ -268,7 +268,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const TimingWidget()),
+                        builder: (context) => const UserPreferences()),
                   );
                 },
                 style: ButtonStyle(
