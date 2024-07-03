@@ -20,7 +20,7 @@ class SessionshistoryAdapter extends TypeAdapter<Sessionshistory> {
       historyTotalTime: fields[0] as int,
       historyHotWaterDuration: fields[1] as int,
       historyColdWaterDuration: fields[2] as int,
-      historyNumberOfCycles: fields[3] as int,
+      historyNumberOfCycles: fields[3] as double,
       historyRating: fields[4] as double,
     );
   }

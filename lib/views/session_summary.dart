@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:contrast_shower_companion/boxes.dart';
-import 'package:contrast_shower_companion/main.dart';
-import 'package:contrast_shower_companion/sessionshistory.dart';
-import 'package:contrast_shower_companion/views/user_preferences.dart';
+import 'package:contrast_shower/boxes.dart';
+import 'package:contrast_shower/main.dart';
+import 'package:contrast_shower/sessionshistory.dart';
+import 'package:contrast_shower/views/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -35,11 +35,11 @@ class _SessionSummary extends ConsumerState<SessionSummary> {
 
     boxSessions.put(
         formattedDate,
-        Sessionshistory (
+        Sessionshistory(
             historyTotalTime: (hotPhase + coldPhase) * cyclePhase,
             historyHotWaterDuration: hotPhase,
             historyColdWaterDuration: coldPhase,
-            historyNumberOfCycles: cyclePhase,
+            historyNumberOfCycles: cyclePhase.toDouble(),
             historyRating: sessionRating));
   }
 
@@ -48,7 +48,7 @@ class _SessionSummary extends ConsumerState<SessionSummary> {
     final hotPhase = int.tryParse(ref.read(hotPhaseProvider))!;
     final coldPhase = int.tryParse(ref.read(coldPhaseProvider))!;
     final cyclePhase = int.tryParse(ref.read(cyclesProvider)) ?? 0;
-    
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
@@ -257,7 +257,7 @@ class _SessionSummary extends ConsumerState<SessionSummary> {
                 initialRating: 0,
                 minRating: 1,
                 maxRating: 5,
-                allowHalfRating: false,
+                allowHalfRating: true,
                 glow: false,
                 itemSize: 48,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -265,22 +265,25 @@ class _SessionSummary extends ConsumerState<SessionSummary> {
                   setState(() {
                     sessionRating = value;
                   });
-                  
+
                   boxSessions.put(
-                    formattedDate,
-                    Sessionshistory (
-                        historyTotalTime: (hotPhase + coldPhase) * cyclePhase,
-                        historyHotWaterDuration: hotPhase,
-                        historyColdWaterDuration: coldPhase,
-                        historyNumberOfCycles: cyclePhase,
-                        historyRating: sessionRating));
+                      formattedDate,
+                      Sessionshistory(
+                          historyTotalTime: (hotPhase + coldPhase) * cyclePhase,
+                          historyHotWaterDuration: hotPhase,
+                          historyColdWaterDuration: coldPhase,
+                          historyNumberOfCycles: cyclePhase.toDouble(),
+                          historyRating: sessionRating));
                 },
                 ratingWidget: RatingWidget(
                   full: const Icon(
                     Icons.star,
                     color: Colors.amber,
                   ),
-                  half: const Icon(Icons.star_half),
+                  half: const Icon(
+                    Icons.star_half,
+                    color: Colors.amber,
+                  ),
                   empty: const Icon(
                     Icons.star_border,
                     color: Color.fromARGB(255, 186, 185, 185),
@@ -306,8 +309,7 @@ class _SessionSummary extends ConsumerState<SessionSummary> {
                   child: const Icon(
                     Icons.home,
                     size: 40,
-                  )
-                  ),
+                  )),
             ),
           ),
         ],

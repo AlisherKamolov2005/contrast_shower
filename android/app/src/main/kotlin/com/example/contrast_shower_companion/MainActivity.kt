@@ -1,4 +1,4 @@
-package com.example.contrast_shower_companion
+package com.example.contrast_shower
 
 import io.flutter.embedding.android.FlutterActivity
 

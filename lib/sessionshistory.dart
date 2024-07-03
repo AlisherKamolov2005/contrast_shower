@@ -20,7 +20,7 @@ class Sessionshistory {
   int historyColdWaterDuration;
 
   @HiveField(3)
-  int historyNumberOfCycles;
+  double historyNumberOfCycles;
 
   @HiveField(4)
   double historyRating;

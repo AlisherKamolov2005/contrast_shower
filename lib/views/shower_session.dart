@@ -1,9 +1,12 @@
 import 'dart:async';
-import 'package:contrast_shower_companion/views/user_preferences.dart';
-import 'package:contrast_shower_companion/views/session_summary.dart';
+import 'package:contrast_shower/boxes.dart';
+import 'package:contrast_shower/sessionshistory.dart';
+import 'package:contrast_shower/views/user_preferences.dart';
+import 'package:contrast_shower/views/session_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 
 class ShowerSession extends ConsumerStatefulWidget {
   const ShowerSession({super.key});
@@ -12,7 +15,11 @@ class ShowerSession extends ConsumerStatefulWidget {
   _ShowerSession createState() => _ShowerSession();
 }
 
-class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProviderStateMixin {
+class _ShowerSession extends ConsumerState<ShowerSession>
+    with SingleTickerProviderStateMixin {
+  String formattedDate = '';
+  double sessionRating = 0;
+
   bool _isRunning = true;
   bool _newPhase = true;
   Timer? _timer;
@@ -39,10 +46,9 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
           }
           if (numberOfCycles == cyclePhase * 2) {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SessionSummary()),
-                );
+              context,
+              MaterialPageRoute(builder: (context) => const SessionSummary()),
+            );
           }
         });
       } else {
@@ -75,11 +81,13 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
       duration: const Duration(seconds: 1),
       vsync: this,
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0.0, 0.0), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.0), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    _fadeAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOutCubic);
-    
+    _fadeAnimation = CurvedAnimation(
+        parent: _animationController, curve: Curves.easeInOutCubic);
+
     ///Ensures the provided callback is called after the widget has been fully built.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       clicked();
@@ -89,7 +97,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
   @override
   void dispose() {
     _timer?.cancel();
-     _animationController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -111,7 +119,6 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
       }
       _newPhase = !_newPhase;
       _animationController.forward(from: 0.0); // Start the animation
-
     });
     startTimer();
   }
@@ -122,16 +129,17 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
     final coldPhase = int.tryParse(ref.read(coldPhaseProvider))! * 60;
     final cyclePhase = int.tryParse(ref.read(cyclesProvider)) ?? 0;
 
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: _newPhase ? Colors.blue: const Color.fromARGB(243, 221, 23, 9),
+      backgroundColor:
+          _newPhase ? Colors.blue : const Color.fromARGB(243, 221, 23, 9),
 
       /// Prevents the widget from resizing when the keyboard appears
       body: Stack(
         children: [
+          (!_newPhase)
           /// Ongoing Phase: Hot Water
-          SlideTransition(
+          ? SlideTransition(
             position: _slideAnimation,
             child: FadeTransition(
               opacity: _fadeAnimation,
@@ -162,7 +170,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                         ),
                       ),
                     ),
-              
+
                     Center(
                       child: AutoSizeText(
                         timerText,
@@ -173,7 +181,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                         maxLines: 1,
                       ),
                     ),
-              
+
                     /// Showing the Next Phase
                     Positioned(
                       bottom: 50,
@@ -211,7 +219,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                         ),
                       ),
                     ),
-              
+
                     /// Button to pause/play ongoing phase
                     Align(
                       alignment: Alignment.bottomLeft,
@@ -220,7 +228,6 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                         onPressed: () {
                           _isRunning = false;
                           _timer?.cancel();
-              
                           Navigator.pop(context);
                         },
                         icon: const Icon(
@@ -229,7 +236,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                         ),
                       ),
                     ),
-              
+
                     /// Button to end onling phase
                     Align(
                       alignment: Alignment.bottomRight,
@@ -257,11 +264,10 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                 ),
               ),
             ),
-          ),
-
+          )
           /// Ongoing Phase: Cold Water
-          if (_newPhase)
-            SlideTransition(
+          :
+          SlideTransition(
               position: _slideAnimation,
               child: FadeTransition(
                 opacity: _fadeAnimation,
@@ -292,7 +298,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                           ),
                         ),
                       ),
-                
+
                       Center(
                         child: AutoSizeText(
                           timerText,
@@ -303,7 +309,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                           maxLines: 1,
                         ),
                       ),
-                
+
                       /// Containers for showing the Next Phase
                       // End of Timer
                       (numberOfCycles == cyclePhase * 2 - 1)
@@ -344,7 +350,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                               ),
                             )
                           :
-                
+
                           /// Shwonig the Next Phase
                           Positioned(
                               bottom: 50,
@@ -381,7 +387,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                                 ),
                               ),
                             ),
-                
+
                       /// Button to pause/play ongoing phase
                       Align(
                         alignment: Alignment.bottomLeft,
@@ -390,7 +396,6 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                           onPressed: () {
                             _isRunning = false;
                             _timer?.cancel();
-                
                             Navigator.pop(context);
                           },
                           icon: const Icon(
@@ -399,7 +404,7 @@ class _ShowerSession extends ConsumerState<ShowerSession> with SingleTickerProvi
                           ),
                         ),
                       ),
-                
+
                       /// Button to end onling phase
                       Align(
                         alignment: Alignment.bottomRight,

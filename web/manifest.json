@@ -1,6 +1,6 @@
 {
-    "name": "contrast_shower_companion",
-    "short_name": "contrast_shower_companion",
+    "name": "contrast_shower",
+    "short_name": "contrast_shower",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

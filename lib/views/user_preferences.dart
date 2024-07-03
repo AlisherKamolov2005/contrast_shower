@@ -1,4 +1,4 @@
-import 'package:contrast_shower_companion/views/shower_session.dart';
+import 'package:contrast_shower/views/shower_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,7 +63,7 @@ class _UserPreferences extends ConsumerState<UserPreferences> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red,
       ),
       body: Stack(
         alignment: const Alignment(0.0, 0.15),
@@ -363,7 +363,7 @@ class _UserPreferences extends ConsumerState<UserPreferences> {
               );
             },
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Colors.green),
+              backgroundColor: WidgetStateProperty.all(Colors.blue),
               padding: WidgetStateProperty.all(
                   const EdgeInsets.all(13)), // Adjust padding as needed:
             ),

@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:contrast_shower_companion/boxes.dart';
-import 'package:contrast_shower_companion/sessionshistory.dart';
+import 'package:contrast_shower/boxes.dart';
+import 'package:contrast_shower/sessionshistory.dart';
 import 'package:flutter/material.dart';
-import 'package:contrast_shower_companion/views/user_preferences.dart';
+import 'package:contrast_shower/views/user_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Contrast Showering',
+      title: 'Contrast Shower',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -88,9 +88,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 padding: const EdgeInsets.only(top: 37, left: 3),
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 2.5, color: Colors.orange.shade100),
+                    border: Border.all(width: 1.5, color: Colors.red),
                     borderRadius: BorderRadius.circular(5),
-                    color: Colors.orange.shade50, 
+                    color: Colors.red, 
                   ),
                   height: screenHeight * 0.30,
                   width: screenWidth * 0.39,
@@ -102,7 +102,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         'Rating',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.orange,
+                          color: Colors.white,
                           fontSize: 17,
                         ),
                         maxLines: 1,
@@ -111,6 +111,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         'Total time (min.)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                           fontSize: 17,
                         ),
                         maxLines: 1,
@@ -119,7 +120,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         'Hot Water (min.)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                          color: Colors.white,
                           fontSize: 17,
                         ),
                         maxLines: 1,
@@ -128,7 +129,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         'Cold Water (min.)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: Colors.white,
                           fontSize: 17,
                         ),
                         maxLines: 1,
@@ -137,6 +138,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         'No. of Cycles',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                           fontSize: 17,
                         ),
                       ),
@@ -180,15 +182,15 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: const Border(
-                                  right: BorderSide(color: Colors.amber),
-                                  top: BorderSide(color: Colors.amber),
-                                  bottom: BorderSide(color: Colors.amber),
+                                  right: BorderSide(color: Colors.blue,),
+                                  top: BorderSide(color: Colors.blue,),
+                                  bottom: BorderSide(color: Colors.blue,),
                                 ),
                                 borderRadius: BorderRadius.circular(5),
-                                color: Colors.amber.shade50,
+                                color: Colors.blue,//amber.shade50,
                               ),
-                              width: screenWidth * 0.196,
-                              margin: const EdgeInsets.only(left: 2),
+                              width: screenWidth * 0.191,
+                              margin: const EdgeInsets.only(left: 4),
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -197,6 +199,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                     sessionshistory.historyRating.toString(),
                                     style: const TextStyle(
                                       fontSize: 17,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
                                     ),
                                     maxLines: 1,
                                   ),
@@ -204,6 +208,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                     sessionshistory.historyTotalTime.toString(),
                                     style: const TextStyle(
                                       fontSize: 17,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
                                     ),
                                     maxLines: 1,
                                   ),
@@ -212,6 +218,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toString(),
                                     style: const TextStyle(
                                       fontSize: 17,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
                                     ),
                                     maxLines: 1,
                                   ),
@@ -220,6 +228,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toString(),
                                     style: const TextStyle(
                                       fontSize: 17,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
                                     ),
                                     maxLines: 1,
                                   ),
@@ -228,6 +238,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toString(),
                                     style: const TextStyle(
                                       fontSize: 17,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
                                     ),
                                     maxLines: 1,
                                   ),

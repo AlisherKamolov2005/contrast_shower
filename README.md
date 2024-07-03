@@ -1,4 +1,4 @@
-# contrast_shower_companion
+# contrast_shower
 
 A new Flutter project.
 
