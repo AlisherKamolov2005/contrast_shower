@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'package:contrast_shower/boxes.dart';
-import 'package:contrast_shower/sessionshistory.dart';
 import 'package:contrast_shower/views/user_preferences.dart';
 import 'package:contrast_shower/views/session_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:intl/intl.dart';
 
 class ShowerSession extends ConsumerStatefulWidget {
   const ShowerSession({super.key});
